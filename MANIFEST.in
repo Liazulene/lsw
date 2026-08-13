@@ -1,0 +1,5 @@
+# Source distribution contents beyond what setuptools includes by default.
+include CHANGELOG.md
+include LICENSE
+include LSW_SPEC.md
+recursive-include docs *.md

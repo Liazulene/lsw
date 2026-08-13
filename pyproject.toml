@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lsw"
+description = "LSW — Linux Subsystem for Windows: a WSL-like manager for isolated Windows userspace (Wine prefix) instances on Linux"
+readme = "README.md"
+requires-python = ">=3.10"
+dynamic = ["version"]
+license = { file = "LICENSE" }
+authors = [{ name = "LSW contributors" }]
+keywords = ["wine", "wsl", "windows", "linux", "prefix", "manager"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Systems Administration",
+]
+dependencies = [
+    "tomli>=2.0; python_version < '3.11'",
+    "tomli-w>=1.0",
+]
+
+[project.scripts]
+lsw = "lsw.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "build>=1.2",
+    "mypy>=1.11",
+    "pytest>=8",
+    "ruff>=0.6",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# Single source of truth for the version: src/lsw/__init__.py. pyproject reads
+# it at build time, so package metadata and `lsw --version` can never diverge.
+[tool.setuptools.dynamic]
+version = { attr = "lsw.__version__" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "wine: requires a real Wine installation (integration; auto-skipped when Wine is absent)",
+    "integration: touches real filesystem/process state beyond unit isolation",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.10"
+check_untyped_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+show_error_codes = true
+files = ["src"]
