@@ -67,7 +67,11 @@ select = ["E", "F", "W", "I", "UP", "B"]
 quote-style = "double"
 
 [tool.mypy]
-python_version = "3.10"
+# No `python_version` pin: mypy follows the running interpreter, so the
+# version-aware tomllib/tomli import in `lsw/config.py` and `lsw/repository.py`
+# is type-checked against the matching stdlib. Python 3.10 (local dev and the
+# 3.10 CI job) still type-checks as 3.10; 3.11/3.12 CI jobs use stdlib
+# `tomllib` and never require the `tomli` backport to be installed.
 check_untyped_defs = true
 disallow_untyped_defs = true
 no_implicit_optional = true
